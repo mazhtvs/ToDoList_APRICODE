@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { TextField, List, ListItem, ListItemText, Checkbox, IconButton, Button, Collapse } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-// Интерфейс задачи
 interface Task {
   text: string;
   description: string;
@@ -122,7 +121,7 @@ export default function TodoList() {
 
   const renderSubtasks = (subtasks: Task[], parentPath: string) => {
     return (
-      <List style={{backgroundColor:'#f7fafc'}}>
+      <List style={{ backgroundColor: '#f7fafc' }}>
         {subtasks.map((subtask, index) => {
           const currentPath = `${parentPath}-${index}`;
           return (
@@ -134,7 +133,9 @@ export default function TodoList() {
                 />
                 <ListItemText
                   primary={subtask.text}
+                  secondary={subtask.description}
                   onClick={() => toggleSubtasks(currentPath)}
+                  style={{ width: '50%', wordWrap: 'break-word' }} // Ограничение ширины
                 />
                 <IconButton onClick={() => deleteTask(currentPath)}>
                   <DeleteIcon />
@@ -153,13 +154,13 @@ export default function TodoList() {
   };
 
   return (
-    <div style={{ marginLeft: '150px' }}>
-      <h1 style={{color:'#7abdff'}}>Список задач</h1>
+    <div style={{ marginLeft: '150px', width:'80vw'}}>
+      <h1 style={{ color: '#7abdff' }}>Список задач</h1>
       <TextField
         label="Название задачи"
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
-        style={{ marginBottom: '10px', width: '50%' }}
+        style={{ marginBottom: '10px', width: '100%' }}
       />
       <TextField
         label="Описание"
@@ -176,14 +177,16 @@ export default function TodoList() {
       <List>
         {tasks.map((task, index) => (
           <div key={index}>
-            <ListItem style={{ backgroundColor: '#ddeeff', borderRadius: '10px', marginBottom:'10px'}}>
+            <ListItem style={{ backgroundColor: '#ddeeff', borderRadius: '10px', marginBottom: '10px' }}>
               <Checkbox
                 checked={task.completed}
                 onChange={() => toggleTaskCompletion(index.toString())}
               />
               <ListItemText
                 primary={task.text}
+                secondary={task.description}
                 onClick={() => toggleSubtasks(index.toString())}
+                style={{ maxWidth: '80vw', wordWrap: 'break-word' }} // Ограничение ширины
               />
               <IconButton onClick={() => deleteTask(index.toString())}>
                 <DeleteIcon />
