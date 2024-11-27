@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TextField, List, ListItem, ListItemText, Checkbox, IconButton, Button, Collapse } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
