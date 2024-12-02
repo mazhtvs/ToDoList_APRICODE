@@ -49,21 +49,23 @@ export default function TodoList() {
   };
 
   const deleteTask = (path: string) => {
+    if (!window.confirm("Вы уверены, что хотите удалить эту задачу?")) return;
+  
     const updatedTasks = [...tasks];
     const pathArray = path.split('-').map(Number);
-
+  
     if (pathArray.length === 1) {
       updatedTasks.splice(pathArray[0], 1);
     } else {
       let current = updatedTasks[pathArray[0]];
-
+  
       for (let i = 1; i < pathArray.length - 1; i++) {
         current = current.subtasks[pathArray[i]] as Task;
       }
-
+  
       current.subtasks.splice(pathArray[pathArray.length - 1], 1);
     }
-
+  
     setTasks(updatedTasks);
   };
 
@@ -139,7 +141,7 @@ export default function TodoList() {
                   primary={subtask.text}
                   secondary={subtask.description}
                   onClick={() => toggleSubtasks(currentPath)}
-                  style={{ width: '50%', wordWrap: 'break-word' }}
+                  style={{ width: '50%', wordWrap: 'break-word', color:'blue'}}
                 />
                 <IconButton onClick={() => deleteTask(currentPath)}>
                   <DeleteIcon />
@@ -190,7 +192,7 @@ export default function TodoList() {
                 primary={task.text}
                 secondary={task.description}
                 onClick={() => toggleSubtasks(index.toString())}
-                style={{ maxWidth: '80vw', wordWrap: 'break-word' }}
+                style={{ maxWidth: '80vw', wordWrap: 'break-word', color: 'blue' }}
               />
               <IconButton onClick={() => deleteTask(index.toString())}>
                 <DeleteIcon />
