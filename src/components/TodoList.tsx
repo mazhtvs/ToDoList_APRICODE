@@ -32,7 +32,7 @@ export default function TodoList() {
 
     const updatedTasks = [...tasks];
     const pathArray = path.split('-').map(Number);
-    let current = updatedTasks[pathArray[0]];
+    let current: Task = updatedTasks[pathArray[0]];
 
     for (let i = 1; i < pathArray.length; i++) {
       current = current.subtasks[pathArray[i]] as Task;
@@ -93,24 +93,28 @@ export default function TodoList() {
 
   const updateParentCompletion = (path: string, tasks: Task[]) => {
     const pathArray = path.split('-').map(Number);
-
+  
     while (pathArray.length > 0) {
       const parentPath = pathArray.slice(0, -1);
       let parent: Task | null = null;
       let currentTasks = tasks;
-
+  
       parentPath.forEach((index) => {
         parent = currentTasks[index] as Task;
         currentTasks = parent.subtasks;
       });
 
       if (parent) {
-        parent.completed = parent.subtasks.every((subtask) => subtask.completed);
+        (parent as Task).completed = (parent as Task).subtasks.every(
+          (subtask) => subtask.completed
+        );
       }
+  
       pathArray.pop();
     }
   };
-
+  
+  
   const toggleSubtasks = (path: string) => {
     setExpandedPaths((prevPaths) =>
       prevPaths.includes(path)
@@ -121,12 +125,12 @@ export default function TodoList() {
 
   const renderSubtasks = (subtasks: Task[], parentPath: string) => {
     return (
-      <List style={{ backgroundColor: '#f7fafc' }}>
+      <List>
         {subtasks.map((subtask, index) => {
           const currentPath = `${parentPath}-${index}`;
           return (
             <div key={currentPath}>
-              <ListItem style={{ marginLeft: `${(parentPath.split('-').length - 1) * 20}px` }}>
+              <ListItem style={{ marginLeft: `${(parentPath.split('-').length - 1) * 20}px`, marginBottom: '4px', backgroundColor: '#e3e5f2', borderRadius:'10px' }}>
                 <Checkbox
                   checked={subtask.completed}
                   onChange={() => toggleTaskCompletion(currentPath)}
@@ -135,7 +139,7 @@ export default function TodoList() {
                   primary={subtask.text}
                   secondary={subtask.description}
                   onClick={() => toggleSubtasks(currentPath)}
-                  style={{ width: '50%', wordWrap: 'break-word' }} // Ограничение ширины
+                  style={{ width: '50%', wordWrap: 'break-word' }}
                 />
                 <IconButton onClick={() => deleteTask(currentPath)}>
                   <DeleteIcon />
@@ -154,18 +158,18 @@ export default function TodoList() {
   };
 
   return (
-    <div style={{ marginLeft: '150px', width:'80vw'}}>
+    <div style={{ marginLeft: '50px', width:'75vw'}}>
       <h1 style={{ color: '#7abdff' }}>Список задач</h1>
       <TextField
         label="Название задачи"
         value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewTask(e.target.value)}
         style={{ marginBottom: '10px', width: '100%' }}
       />
       <TextField
         label="Описание"
         value={newDescription}
-        onChange={(e) => setNewDescription(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewDescription(e.target.value)}
         multiline
         rows={3}
         style={{ marginBottom: '10px', width: '100%' }}
@@ -186,7 +190,7 @@ export default function TodoList() {
                 primary={task.text}
                 secondary={task.description}
                 onClick={() => toggleSubtasks(index.toString())}
-                style={{ maxWidth: '80vw', wordWrap: 'break-word' }} // Ограничение ширины
+                style={{ maxWidth: '80vw', wordWrap: 'break-word' }}
               />
               <IconButton onClick={() => deleteTask(index.toString())}>
                 <DeleteIcon />
